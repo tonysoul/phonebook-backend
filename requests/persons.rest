@@ -1,0 +1,43 @@
+###
+GET http://localhost:3001/info 
+
+
+### POST
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+  "name": "tony",
+  "number": "1983791"
+}
+
+
+### POST
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+  "name": "tom",
+  "number": "1983791"
+}
+
+### all
+GET http://localhost:3001/api/persons 
+
+
+###
+GET http://localhost:3001/api/persons/1 
+
+
+### 404
+GET http://localhost:3001/api/persons/999 
+
+
+### delete 404
+DELETE http://localhost:3001/api/persons/kh
+
+
+### delete 204
+DELETE http://localhost:3001/api/persons/1
+
+
