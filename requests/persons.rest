@@ -38,6 +38,6 @@ DELETE http://localhost:3001/api/persons/kh
 
 
 ### delete 204
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/6860b68823efc3bc28682ec0
 
 
