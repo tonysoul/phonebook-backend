@@ -20,34 +20,6 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :type")
 );
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-
-const generateId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((p) => p.id)) : 0;
-  return maxId + 1;
-};
-
 app.get("/info", (req, res) => {
   const time = new Date();
 
@@ -58,52 +30,20 @@ app.get("/info", (req, res) => {
   });
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
 
-  if (body.name === undefined || body.number === undefined) {
-    return res.status(400).json({ error: "name or number must be required" });
-  }
-
-  Person.findOne({ name: body.name }).then((result) => {
-    if (result) {
-      return res
-        .status(400)
-        .json({ error: `name:${body.name} must be uniqlo` });
-    }
-
-    const newPerson = new Person({
-      name: body.name,
-      number: body.number,
-    });
-
-    newPerson.save().then((savedPerson) => {
-      res.json(savedPerson);
-    });
+  const person = new Person({
+    name: body.name,
+    number: body.number,
   });
 
-  // const body = req.body;
-
-  // if (!body.name || !body.number) {
-  //   return res.status(400).json({
-  //     error: "name or number must be required",
-  //   });
-  // }
-
-  // const founded = persons.find((p) => p.name === body.name);
-  // if (founded) {
-  //   return res.status(400).json({
-  //     error: "name must be unique",
-  //   });
-  // }
-
-  // const newPerson = {
-  //   ...body,
-  //   id: generateId(),
-  // };
-
-  // persons = persons.concat(newPerson);
-  // res.json(newPerson);
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons", (req, res) => {
@@ -128,11 +68,15 @@ app.put("/api/persons/:id", (req, res, next) => {
   const body = req.body;
 
   const person = {
-    name: body.name,
-    number: body.number,
+    name: "",
+    number: "",
+    ...body,
   };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatePerson) => {
       res.json(updatePerson);
     })
@@ -160,6 +104,10 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return res.status(400).send({ error: error.message });
+  } else if (error.name === "MongoServerError") {
+    return res.status(400).send({ error: error.message });
   }
 
   next(error);

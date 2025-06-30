@@ -2,13 +2,13 @@
 GET http://localhost:3001/info 
 
 
-### POST
+### POSTs
 POST http://localhost:3001/api/persons 
 Content-Type: application/json
 
 {
-  "name": "tony",
-  "number": "1983791"
+  "name": "hawana",
+  "number": "123-12322"
 }
 
 
@@ -17,8 +17,8 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "tom",
-  "number": "1983791"
+  "name": "hao",
+  "number": "123"
 }
 
 ### all
@@ -31,6 +31,15 @@ GET http://localhost:3001/api/persons/1
 
 ### 404
 GET http://localhost:3001/api/persons/999 
+
+###
+PUT http://localhost:3001/api/persons/686203cbd5ec537c9fe38fef
+Content-Type: application/json
+
+{
+  "name": "hao",
+  "number": "12123"
+}
 
 
 ### delete 404
