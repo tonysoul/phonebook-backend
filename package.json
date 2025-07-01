@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "build:ui": "rm -rf dist && cd ../fullstackopen-submission/part2/phonebook && npm run build && cp -r dist ../../../phonebook-backend/",
     "deploy": "git push",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
@@ -16,6 +18,10 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "@stylistic/eslint-plugin": "^5.1.0",
+    "eslint": "^9.30.0",
+    "globals": "^16.2.0",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
